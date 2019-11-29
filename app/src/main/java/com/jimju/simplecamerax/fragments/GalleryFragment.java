@@ -27,6 +27,7 @@ import com.jimju.simplecamerax.utils.ViewExtensions;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GalleryFragment extends Fragment {
@@ -67,9 +68,10 @@ public class GalleryFragment extends Fragment {
         Bundle arguments = getArguments();
         rootDirectory = new File(arguments.getString(KEY_ROOT_DIRECTORY));
         mediaList = new ArrayList();
-        for (File f : rootDirectory.listFiles()) {
-            mediaList.add(f);
-        }
+        if (rootDirectory != null && rootDirectory.length() > 0)
+            for (File f : rootDirectory.listFiles()) {
+                mediaList.add(0,f);
+            }
 
         mediaViewPager = view.findViewById(R.id.photo_view_pager);
         mediaViewPager.setOffscreenPageLimit(2);
@@ -95,19 +97,19 @@ public class GalleryFragment extends Fragment {
                 Intent intent = new Intent();
                 String extension = ViewExtensions.extension(mediaFile);
                 String mediaType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-                Uri uri = FileProvider.getUriForFile(appContext, BuildConfig.APPLICATION_ID + ".provider",mediaFile);
-                intent.putExtra(Intent.EXTRA_STREAM,uri);
+                Uri uri = FileProvider.getUriForFile(appContext, BuildConfig.APPLICATION_ID + ".provider", mediaFile);
+                intent.putExtra(Intent.EXTRA_STREAM, uri);
                 intent.setType(mediaType);
                 intent.setAction(Intent.ACTION_SEND);
                 intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                startActivity(Intent.createChooser(intent,getString(R.string.share_hint)));
+                startActivity(Intent.createChooser(intent, getString(R.string.share_hint)));
             }
         });
 
         view.findViewById(R.id.delete_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mediaList.isEmpty()){
+                if (mediaList.isEmpty()) {
                     return;
                 }
                 Context context = getActivity();

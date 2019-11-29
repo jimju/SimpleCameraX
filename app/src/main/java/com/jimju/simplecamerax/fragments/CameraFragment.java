@@ -126,10 +126,9 @@ public class CameraFragment extends Fragment {
             // We can only change the foreground Drawable using API level 23+ API
             //我们只能改变前景图像使用API23之后的API
 //            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-                // Update the gallery thumbnail with latest picture taken
-                //更新展示的缩略图为之后拍摄的照片
-                setGalleryThumbnail(file);
+            // Update the gallery thumbnail with latest picture taken
+            //更新展示的缩略图为之后拍摄的照片
+            setGalleryThumbnail(file);
 //            }
 
             // Implicit broadcasts will be ignored for devices running API
@@ -175,12 +174,13 @@ public class CameraFragment extends Fragment {
                 updateCameraUi();
                 bindCameraUseCases();
                 File[] files = outputDirectory.listFiles();
-                for (File file : files) {
-                    if (ViewExtensions.extension(file).equals(GalleryFragment.EXTENSION_WHITELIST[0])) {
-                        setGalleryThumbnail(file);
-                        break;
+                if (files!=null &&files.length > 0)
+                    for (File file : files) {
+                        if (ViewExtensions.extension(file).equals(GalleryFragment.EXTENSION_WHITELIST[0])) {
+                            setGalleryThumbnail(file);
+                            break;
+                        }
                     }
-                }
             }
         });
     }
@@ -238,14 +238,21 @@ public class CameraFragment extends Fragment {
                 ImageCapture.Metadata metadata = new ImageCapture.Metadata();
                 metadata.isReversedHorizontal = lensFacing == CameraX.LensFacing.FRONT;
                 imageCapture.takePicture(photoFile, imageSavedListener, metadata);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+              /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     container.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             container.setForeground(new ColorDrawable(Color.WHITE));
+                            container.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    container.setForeground(null);
+                                }
+                            },ViewExtensions.ANIMATION_SLOW_MILLIS);
                         }
                     }, ViewExtensions.ANIMATION_SLOW_MILLIS);
-                }
+                }*/
             }
         });
         controls.findViewById(R.id.camera_switch_button).setOnClickListener(new View.OnClickListener() {
@@ -256,7 +263,6 @@ public class CameraFragment extends Fragment {
                 try {
                     CameraX.getCameraWithLensFacing(lensFacing);
                     bindCameraUseCases();
-                    ;
                 } catch (Exception exc) {
 
                 }
