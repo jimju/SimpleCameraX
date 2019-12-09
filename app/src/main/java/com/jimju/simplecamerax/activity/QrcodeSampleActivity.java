@@ -14,6 +14,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -101,13 +102,10 @@ public class QrcodeSampleActivity extends AppCompatActivity {
                         ViewGroup parent = (ViewGroup) txView.getParent();
                         parent.removeView(txView);
                         parent.addView(txView, 0);
-
                         txView.setSurfaceTexture(output.getSurfaceTexture());
                         updateTransform();
                     }
                 });
-
-
 
 
         /* image analyser */

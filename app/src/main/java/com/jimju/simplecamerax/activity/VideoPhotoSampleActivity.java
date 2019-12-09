@@ -79,6 +79,7 @@ public class VideoPhotoSampleActivity extends AppCompatActivity implements Captu
 
     @Override
     public void recordEnd(long time) {
+        isTooShort = false;
         if (mCameraView.isRecording())
             mCameraView.stopRecording();
     }
