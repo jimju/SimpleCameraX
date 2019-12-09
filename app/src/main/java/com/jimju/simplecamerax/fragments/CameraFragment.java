@@ -6,10 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.hardware.Camera;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -18,10 +15,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.Rational;
 import android.util.Size;
-import android.util.TimeUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.TextureView;
@@ -46,7 +41,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
-import com.jimju.simplecamerax.MainActivity;
+import com.jimju.simplecamerax.activity.CameraSampleActivity;
 import com.jimju.simplecamerax.R;
 import com.jimju.simplecamerax.utils.AutoFitPreviewBuilder;
 import com.jimju.simplecamerax.utils.ImageUtils;
@@ -62,8 +57,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import static com.jimju.simplecamerax.MainActivity.KEY_EVENT_ACTION;
-import static com.jimju.simplecamerax.MainActivity.KEY_EVENT_EXTRA;
+import static com.jimju.simplecamerax.activity.CameraSampleActivity.KEY_EVENT_ACTION;
+import static com.jimju.simplecamerax.activity.CameraSampleActivity.KEY_EVENT_EXTRA;
 
 public class CameraFragment extends Fragment {
     private final static String TAG = "CameraXBasic";
@@ -147,9 +142,11 @@ public class CameraFragment extends Fragment {
         }
 
         @Override
-        public void onError(@NonNull ImageCapture.UseCaseError useCaseError, @NonNull String message, @Nullable Throwable cause) {
+        public void onError(@NonNull ImageCapture.ImageCaptureError imageCaptureError, @NonNull String message, @Nullable Throwable cause) {
             cause.printStackTrace();
         }
+
+
     };
 
     @Override
@@ -163,7 +160,7 @@ public class CameraFragment extends Fragment {
 
         // Determine the output directory
         //指定输出路径
-        outputDirectory = MainActivity.getOutputDirectory(requireContext());
+        outputDirectory = CameraSampleActivity.getOutputDirectory(requireContext());
 
         // Build UI and bind all camera use cases once the views have been laid out
 
@@ -239,20 +236,6 @@ public class CameraFragment extends Fragment {
                 metadata.isReversedHorizontal = lensFacing == CameraX.LensFacing.FRONT;
                 imageCapture.takePicture(photoFile, imageSavedListener, metadata);
 
-              /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    container.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            container.setForeground(new ColorDrawable(Color.WHITE));
-                            container.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    container.setForeground(null);
-                                }
-                            },ViewExtensions.ANIMATION_SLOW_MILLIS);
-                        }
-                    }, ViewExtensions.ANIMATION_SLOW_MILLIS);
-                }*/
             }
         });
         controls.findViewById(R.id.camera_switch_button).setOnClickListener(new View.OnClickListener() {

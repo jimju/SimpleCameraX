@@ -8,8 +8,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.hardware.Camera;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,12 +32,10 @@ import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureConfig;
 import androidx.camera.core.Preview;
 import androidx.camera.core.PreviewConfig;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.bumptech.glide.Glide;
-import com.jimju.simplecamerax.MainActivity;
 import com.jimju.simplecamerax.R;
 import com.jimju.simplecamerax.utils.AutoFitPreviewBuilder;
 import com.jimju.simplecamerax.utils.ImageUtils;
@@ -175,17 +171,16 @@ public class CamareDemoActivity extends AppCompatActivity implements View.OnClic
         }
 
         @Override
-        public void onError(@NonNull ImageCapture.UseCaseError useCaseError, @NonNull String message, @Nullable Throwable cause) {
+        public void onError(@NonNull ImageCapture.ImageCaptureError imageCaptureError, @NonNull String message, @Nullable Throwable cause) {
             Log.e("ImageSaveError", message);
         }
-
 
     };
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.camera_capture_button) {
-            File photoFile = new File(MainActivity.getOutputDirectory(this), new SimpleDateFormat(FILENAME, Locale.CHINA).format(System.currentTimeMillis()) + ".jpg");
+            File photoFile = new File(CameraSampleActivity.getOutputDirectory(this), new SimpleDateFormat(FILENAME, Locale.CHINA).format(System.currentTimeMillis()) + ".jpg");
             ImageCapture.Metadata metadata = new ImageCapture.Metadata();
             metadata.isReversedHorizontal = lensFacing == CameraX.LensFacing.FRONT;
             imageCapture.takePicture(photoFile, imageSavedListener, metadata);

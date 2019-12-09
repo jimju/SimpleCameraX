@@ -1,59 +1,45 @@
 package com.jimju.simplecamerax;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
-import android.widget.FrameLayout;
+import android.view.View;
 
-import com.jimju.simplecamerax.utils.ViewExtensions;
+import com.jimju.simplecamerax.activity.CameraSampleActivity;
+import com.jimju.simplecamerax.activity.MinCameraXSampleActivity;
+import com.jimju.simplecamerax.activity.QrcodeSampleActivity;
+import com.jimju.simplecamerax.activity.VideoPhotoSampleActivity;
 
-import java.io.File;
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-public class MainActivity extends AppCompatActivity {
-    public final static String KEY_EVENT_ACTION = "key_event_action";
-    public final static String KEY_EVENT_EXTRA = "key_event_extra";
-    public final long IMMERSIVE_FLAG_TIMEOUT = 500L;
-    private FrameLayout container;
-
-    public static File getOutputDirectory(Context context){
-        Context appContext = context.getApplicationContext();
-        File mediaDir = new File(appContext.getExternalMediaDirs()[0],"CameraX Basic");
-        if (!mediaDir.exists()){
-            mediaDir.mkdirs();
-        }
-        return mediaDir;
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        container = findViewById(R.id.fragment_container);
+        findViewById(R.id.sample_camera_fragment).setOnClickListener(this);
+        findViewById(R.id.sample_camera).setOnClickListener(this);
+        findViewById(R.id.sample_qrcode).setOnClickListener(this);
+        findViewById(R.id.sample_video_and_photo).setOnClickListener(this);
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        container.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                container.setSystemUiVisibility(ViewExtensions.FLAGS_FULLSCREEN);
-            }
-        },IMMERSIVE_FLAG_TIMEOUT);
-
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN){
-            Intent intent = new Intent(KEY_EVENT_ACTION);
-            intent.putExtra(KEY_EVENT_EXTRA,keyCode);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-            return true;
+    public void onClick(View v) {
+        Intent intent = new Intent();
+        switch (v.getId()) {
+            case R.id.sample_camera_fragment:
+                intent.setClass(this, CameraSampleActivity.class);
+                break;
+            case R.id.sample_camera:
+                intent.setClass(this, MinCameraXSampleActivity.class);
+                break;
+            case R.id.sample_qrcode:
+                intent.setClass(this, QrcodeSampleActivity.class);
+                break;
+            case R.id.sample_video_and_photo:
+                intent.setClass(this, VideoPhotoSampleActivity.class);
+                break;
         }
-        return super.onKeyDown(keyCode, event);
+        startActivity(intent);
     }
 }
