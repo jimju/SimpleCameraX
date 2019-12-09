@@ -27,6 +27,12 @@ public class ReviewSamleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review_sample);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         ImageView imageView = findViewById(R.id.iv);
         String path = getIntent().getStringExtra("path");
         VideoView mVideoLocal = findViewById(R.id.video);
